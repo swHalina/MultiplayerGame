@@ -70,7 +70,7 @@ function createName() {
   return `${prefix} ${animal}`;
 }
 
-function isSolid(x,y) {
+function isSolid(x, y) {
 
   const blockedNextSpace = mapData.blockedSpaces[getKeyString(x, y)];
   return (
@@ -121,6 +121,14 @@ function getRandomSafeSpot() {
   let coins = {};
   let coinElements = {};
 
+  //Audios 
+
+  const capturaMoneda = new Audio()
+  capturaMoneda.src = './audio/mario-coin.mp3'
+
+  const cancionInicio = new Audio()
+  cancionInicio.src = './audio/mario-bros-cancion.mp3'
+
   const gameContainer = document.querySelector(".game-container");
   const playerNameInput = document.querySelector("#player-name");
   const playerColorButton = document.querySelector("#player-color");
@@ -152,7 +160,7 @@ function getRandomSafeSpot() {
   }
 
 
-  function handleArrowPress(xChange=0, yChange=0) {
+  function handleArrowPress(xChange = 0, yChange = 0) {
     const newX = players[playerId].x + xChange;
     const newY = players[playerId].y + yChange;
     if (!isSolid(newX, newY)) {
@@ -265,9 +273,10 @@ function getRandomSafeSpot() {
       gameContainer.appendChild(coinElement);
     })
     allCoinsRef.on("child_removed", (snapshot) => {
-      const {x,y} = snapshot.val();
-      const keyToRemove = getKeyString(x,y);
-      gameContainer.removeChild( coinElements[keyToRemove] );
+      const { x, y } = snapshot.val();
+      const keyToRemove = getKeyString(x, y);
+      capturaMoneda.play()
+      gameContainer.removeChild(coinElements[keyToRemove]);
       delete coinElements[keyToRemove];
     })
 
@@ -292,7 +301,6 @@ function getRandomSafeSpot() {
 
     //Place my first coin
     placeCoin();
-
   }
 
   firebase.auth().onAuthStateChanged((user) => {
@@ -305,7 +313,7 @@ function getRandomSafeSpot() {
       const name = createName();
       playerNameInput.value = name;
 
-      const {x, y} = getRandomSafeSpot();
+      const { x, y } = getRandomSafeSpot();
 
 
       playerRef.set({
